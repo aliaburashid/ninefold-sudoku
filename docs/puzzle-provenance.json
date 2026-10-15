@@ -1,0 +1,65 @@
+[
+  {
+    "id": "easy-01",
+    "sourceId": "0000183b305c",
+    "rating": "1.2",
+    "digits": "050703060007000800000816000000030000005000100730040086906000204840572093000409000",
+    "url": "https://raw.githubusercontent.com/grantm/sudoku-exchange-puzzle-bank/master/easy.txt"
+  },
+  {
+    "id": "easy-02",
+    "sourceId": "0001d5d6314e",
+    "rating": "1.2",
+    "digits": "302401809001000300000000000040708010780502036000090000200609003900000008800070005",
+    "url": "https://raw.githubusercontent.com/grantm/sudoku-exchange-puzzle-bank/master/easy.txt"
+  },
+  {
+    "id": "easy-03",
+    "sourceId": "000212406270",
+    "rating": "1.2",
+    "digits": "000823001003000400070000052300960010000102000010038006830000040002000900600789000",
+    "url": "https://raw.githubusercontent.com/grantm/sudoku-exchange-puzzle-bank/master/easy.txt"
+  },
+  {
+    "id": "medium-01",
+    "sourceId": "0000847b216e",
+    "rating": "2.3",
+    "digits": "020900000048000031000063020009407003003080200400105600030570000250000180000006050",
+    "url": "https://raw.githubusercontent.com/grantm/sudoku-exchange-puzzle-bank/master/medium.txt"
+  },
+  {
+    "id": "medium-02",
+    "sourceId": "0000c45fb232",
+    "rating": "2.0",
+    "digits": "100800570000009210090040000300900050007000300020006008000020040071400000064007003",
+    "url": "https://raw.githubusercontent.com/grantm/sudoku-exchange-puzzle-bank/master/medium.txt"
+  },
+  {
+    "id": "medium-03",
+    "sourceId": "0000fc7c6b96",
+    "rating": "2.3",
+    "digits": "002000800005020100460000029130060052009080400000302000006070200700000008020519070",
+    "url": "https://raw.githubusercontent.com/grantm/sudoku-exchange-puzzle-bank/master/medium.txt"
+  },
+  {
+    "id": "hard-01",
+    "sourceId": "00005f662e09",
+    "rating": "3.4",
+    "digits": "080200400570000100002300000820090005000715000700020041000006700003000018007009050",
+    "url": "https://raw.githubusercontent.com/grantm/sudoku-exchange-puzzle-bank/master/hard.txt"
+  },
+  {
+    "id": "hard-02",
+    "sourceId": "00009e4900fa",
+    "rating": "2.6",
+    "digits": "600050007030000000080409200015300000008000300000007590009501030000000080200070004",
+    "url": "https://raw.githubusercontent.com/grantm/sudoku-exchange-puzzle-bank/master/hard.txt"
+  },
+  {
+    "id": "hard-03",
+    "sourceId": "0000b2c3fc62",
+    "rating": "4.3",
+    "digits": "210950004090060037000700000000000308920000015805000000000002000680010040100047096",
+    "url": "https://raw.githubusercontent.com/grantm/sudoku-exchange-puzzle-bank/master/hard.txt"
+  }
+]

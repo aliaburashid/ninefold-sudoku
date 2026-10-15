@@ -1,0 +1,8 @@
+bb5ff1d699acc12ae5cfc9e85cc11a5a7bb346f694724c192bbff1e7b83cf243  src/main/java/com/example/sudoku/SudokuApplication.java
+a029d609f63a95fc8a989e186875708a3fbb6f3dc370b5265093dcc1c2495b85  src/main/java/com/example/sudoku/models/Sudoku.java
+87877f8ade86454f25be62fa015a80cb75be0f2f5ccb2c77afb4aeae1d03f0a8  src/main/java/com/example/sudoku/models/SudokuCell.java
+d2f9984b287d2226034d5275790b1085b344278ac9d02542005014998fd02f9d  src/main/java/com/example/sudoku/services/SudokuReader.java
+6e934e645d783e06ff9c0c1f8138c401fd1b79e5abd6825da108a0a12d2730a9  src/main/java/com/example/sudoku/services/SudokuSolver.java
+a87a0acb04a6efc36a947eb333c3c8fde6d4a653ea7457fe28b3701eebb45da7  src/main/java/com/example/sudoku/exception/InvalidCharacterException.java
+95dac7265f9fd7e2dfe38de024940df8920b48d63fa44ba5b9217eef36fdd7f8  src/main/java/com/example/sudoku/exception/SudokuFileNotFoundException.java
+27ead2878a575d44dc3ce2a8709f3dc155e0a9d9aaa796c763890d2c608f6d7c  src/test/java/com/example/sudoku/SudokuApplicationTests.java
