@@ -1,108 +1,120 @@
-# Ninefold
+# Sudoku Solver — Java & Spring Boot
 
-A React Sudoku experience backed by this project's original Java reader and DFS/backtracking/MRV solver. The HTTP layer is additive; this implementation does not edit pre-existing Java source files.
+## Project Overview
 
-The owner-confirmed versions of `Sudoku.java` (including `saveSolution()`) and `SudokuApplication.java` are the accepted preservation baseline. Their checksums are recorded in `docs/original-java.sha256`; the earlier snapshot is archived in `docs/initial-java.sha256`. The final clean build and preservation check pass. See [verification status](docs/VERIFICATION.md).
+This project is a Sudoku solver developed using **Java**, with a focus on object-oriented programming, file handling, recursion, algorithms, and exception handling.
 
-## Run locally
+The main objective is to read a Sudoku puzzle from a text file, represent it as a 9×9 board, validate the input, solve the puzzle, and save the completed solution.
 
-Requirements: Java 17 and Node.js/npm (verified with Java 17 and Node 24).
+The project was later extended with a Spring Boot REST API while retaining the original Java solving logic.
 
-From the project root, start Spring Boot:
+## Project Functionality
 
-```sh
-./mvnw spring-boot:run
-```
+The Java application supports the following:
 
-In a second terminal:
+- Reading Sudoku puzzles from `.txt` files.
+- Representing a 9×9 Sudoku board using Java objects.
+- Identifying fixed values and empty cells.
+- Validating puzzle input and handling invalid files.
+- Solving Sudoku puzzles using a backtracking algorithm.
+- Printing the Sudoku board.
+- Saving completed solutions to separate `.solution.txt` files.
+- Processing multiple puzzle files.
 
-```sh
-cd frontend
-npm ci
-npm run dev
-```
+## My Implementation
 
-Open http://127.0.0.1:5173. Vite proxies `/api` to Spring Boot on port 8080. No CORS configuration is needed for this development setup. Stop either server with Ctrl+C.
+I organised the application into separate Java classes, each with its own responsibility.
 
-If those ports are occupied, use a matching pair:
+| Class | Responsibility |
+|---|---|
+| `SudokuCell` | Represents an individual cell in the Sudoku board. |
+| `Sudoku` | Stores the 9×9 board and provides methods for displaying and saving it. |
+| `SudokuReader` | Reads puzzle data from text files. |
+| `SudokuSolver` | Contains the algorithm used to solve the Sudoku puzzle. |
+| `SudokuApplication` | Starts the application and coordinates puzzle processing. |
+| Custom exception classes | Handle invalid characters and file-related errors. |
 
-```sh
-# Terminal 1, project root
-./mvnw spring-boot:run -Dspring-boot.run.arguments=--server.port=8091
+This separation makes the program easier to understand, test, and maintain.
 
-# Terminal 2, frontend/
-API_PROXY_TARGET=http://127.0.0.1:8091 npm run dev -- --port 5174
-```
+## Sudoku Solving Logic
 
-The original application still reads and prints its existing puzzle files on startup. It now continues running as an HTTP server. Its intentionally invalid puzzle files still produce console error messages; they are excluded from the web catalog.
+The core of the project is the `SudokuSolver` class.
 
-## Playing
+I used a **recursive backtracking approach** to solve Sudoku puzzles.
 
-- Choose Easy, Medium, or Hard, then select **Let's play**.
-- Select a cell and enter a number with the keypad or keyboard. Arrow keys move between cells; Backspace/Delete erases. Original clues are locked.
-- A repeated number marks both the conflicting cells and their row/column/box. A wrong answer without a duplicate receives separate feedback. All Sudoku checks come from Java.
-- **A little hint** reveals a legal value from the Java-generated solution. Clear wrong entries before requesting a reveal. Hints cost 100 points; there is no hint quota or lives limit.
-- Pause hides the board and freezes the timer. Hiding the browser tab also pauses. Reloading resumes through the welcome screen, with no closed-tab time added.
-- Progress saves automatically to local storage. **Save** also saves explicitly. Statistics belong to this browser, without accounts or a database.
-- A completed board is checked by Java before the celebration, score, and personal statistics are recorded.
-- **Export solution** writes a separate backend file and downloads it as `{puzzle-id}.solution.txt`. Existing puzzle resources are never overwritten.
+The algorithm works by:
 
-## Scoring
+1. Finding an empty cell in the Sudoku board.
+2. Determining which numbers from 1 to 9 can legally be placed in that cell.
+3. Checking the Sudoku rules for the row, column, and 3×3 subgrid.
+4. Placing a valid candidate and continuing recursively.
+5. Backtracking when a candidate leads to a situation with no valid solution.
+6. Continuing until the board is complete.
 
-`max(100, difficultyBase + max(0, 600 - floor(activeSeconds / 5)) - hints * 100 - mistakes * 25)`
+The implementation also uses the **Minimum Remaining Values (MRV)** strategy to prioritise cells with fewer possible candidates, reducing unnecessary searches.
 
-Difficulty bases: Easy 1,000; Medium 2,000; Hard 3,000. Paused time is excluded. Only a new incorrect placement adds a mistake; rechecking the same board does not. Minimum score is 100. Scores use browser-provided time and counters and are personal records, not authenticated competitive results.
+### Sudoku Rules
 
-## Architecture
+Every completed board must satisfy three rules:
+
+- Each row contains the numbers 1–9 without repetition.
+- Each column contains the numbers 1–9 without repetition.
+- Each 3×3 subgrid contains the numbers 1–9 without repetition.
+
+## File Handling
+
+The application reads Sudoku puzzles from text files and converts their contents into a board representation.
+
+I also implemented solution exporting using Java's `FileWriter`, allowing the completed Sudoku board to be saved as a separate file.
+
+For example:
 
 ```text
-frontend/ React + Vite + JavaScript + CSS + Motion
-    ↓ fetch /api (same development proxy convention as LimitGuard)
-controllers/SudokuController
-    ↓
-services/PuzzleCatalogService / SudokuGameService / SolutionExportService
-    ↓
-existing SudokuReader / SudokuSolver / Sudoku / SudokuCell
+puzzle1.txt
+puzzle1.solution.txt
 ```
 
-DTOs keep internal cell objects and complete solutions out of the public puzzle responses. `SudokuConfiguration` registers the unchanged reader/solver and rejects decimal/string/null values in integer request fields. Requests use separate board instances because the original solver changes the board while solving and temporarily changes values during validation.
+This allows the original puzzle to be preserved while keeping its solution available for review.
 
-New playable puzzles are under `src/main/resources/puzzles/web/`. See [adding puzzles and provenance](docs/PUZZLES.md). Adding a catalog entry requires no React changes.
+## Validation and Exception Handling
 
-Exports default to `generated-solutions/`. To choose another directory, pass `--ninefold.export-directory=/absolute/path`. Export uses `CREATE_NEW`: identical repeat exports are allowed, but different existing content is not overwritten.
+The application includes validation and custom exception handling for malformed puzzle files.
 
-## Verification
+Examples of invalid input include:
 
-```sh
-# From the project root
-shasum -a 256 -c docs/original-java.sha256
-python3 scripts/verify_catalog.py
-./mvnw test
-./mvnw package
+- Unsupported characters.
+- Incorrect row lengths.
+- An incorrect number of rows.
+- Invalid puzzle configurations.
 
-# From frontend/
-npm test
-npm run build
-```
+Handling these cases separately helps prevent invalid data from being processed as a normal Sudoku puzzle.
 
-Browser tests require the frontend and backend to be running. They use installed Google Chrome by default:
+## Object-Oriented Programming
 
-```sh
-# frontend/, default development ports
-npm run test:browser
+The project applies several Java programming concepts:
 
-# alternate ports
-NINEFOLD_URL=http://127.0.0.1:5174 npm run test:browser
-```
+- **Encapsulation:** Board and cell data are represented through classes.
+- **Abstraction:** Reading, solving, and saving responsibilities are separated.
+- **Methods and objects:** Different classes collaborate to process a puzzle.
+- **Recursion:** The solver repeatedly explores possible solutions.
+- **Exception handling:** Invalid input is handled using dedicated exceptions.
 
-Alternatively run `npx playwright install chromium` and set `PLAYWRIGHT_CHANNEL=chromium`. Tests exercise real HTTP calls to Java, including a full game and downloaded solution. Screenshots and failure traces appear under `frontend/test-results/`.
+## Testing
 
-The offline Python catalog tool is import-time QA: it independently counts solutions up to two and verifies source fingerprints. It is not used by React or the runtime game. The Java solver remains the source of gameplay solutions.
+The project includes test puzzles covering both valid and invalid inputs.
 
-## Design and accessibility
+The Java backend also includes automated tests for existing functionality and the additional REST API.
 
-Ninefold uses warm paper, ink, cobalt, and muted yellow, with local Manrope and DM Sans fonts. Keyboard navigation, visible focus, labeled cells, non-color-only error cues, native confirmation dialogs, reduced-motion support, and responsive controls are included.
+## Technologies Used
 
-Research references: [Fivecube Sudoku](https://dribbble.com/shots/26725563-Sudoku-Mobile-App-UX-UI), [NestStrix Sudoku](https://dribbble.com/shots/4173081-Sudoku-Game-App), [Nixtio gamified dashboard](https://dribbble.com/shots/27216880-Gamified-Dashboard-UI-Avatar-System-Leaderboard), [Hick's Law](https://lawsofux.com/hicks-law/), [Fitts's Law](https://lawsofux.com/fittss-law/), and [goal-gradient effect](https://lawsofux.com/goal-gradient-effect/). These informed the original direction; no design assets were copied.
+- Java 17
+- Spring Boot
+- Maven
+- JUnit
+- Git and GitHub
 
-See [API contracts](docs/API.md) for request and response details.
+## Further Development
+
+After completing the Java solving functionality, I extended the project with a Spring Boot REST API and a React-based interface called **Ninefold**, allowing users to play Sudoku interactively while reusing the Java backend logic.
+
+The original Sudoku implementation remains part of the project.
